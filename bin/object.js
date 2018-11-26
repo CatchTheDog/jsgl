@@ -33,3 +33,27 @@ let o = {x: "don't change this value!"};
 let x = inherit.inherit(o);
 console.log(x);
 //delete运算符值能删除自有属性，不能删除继承属性（要删除继承属性必须从定义这个属性的原型对象上删除它，而且这会影响到所有继承自这个原型的对象）。
+//delete只是断开属性与对象的联系，delete不能删除可配置性为false的属性，而且只能删除自有属性，不能删除继承属性。
+
+//检测属性 in/hasOwnProperty()/propertyIsEnumerable()
+//in 运算符 如果对象的自有属性或继承属性中包含这个属性则返回true
+let in_o = {x: 1};
+console.log("x" in in_o);
+console.log("y" in in_o);
+console.log("toString" in in_o);
+//hasOwnProperty()方法用来检测给定的名字是否是对象的自有属性。
+console.log(in_o.hasOwnProperty("x"));
+console.log(in_o.hasOwnProperty("y"));
+console.log(in_o.hasOwnProperty("toString"));
+//propertyIsEnumerable() 只有检测到是自有属性且这个属性的可没举行为true时才返回true.
+let in_o_2 = inherit.inherit({y: 2});
+in_o_2.x = 1;
+console.log(in_o_2.propertyIsEnumerable("x"));
+console.log(in_o_2.propertyIsEnumerable("y"));
+console.log(Object.prototype.propertyIsEnumerable("toString"));
+//使用!== undefined 判断一个属性是否是undefined   !== 可以区分undefined 和 null; != 不能区分undefined 和null;
+
+//枚举属性 for/in 循环可以在循环体重遍历对象中所有可枚举的属性（包括自有属性和继承属性）
+
+
+
