@@ -38,6 +38,10 @@ function union(o, p) {
     //return extend(o,p);
 }
 
+function insertion(o, p) {
+    return restrict(extend({}, o), p);
+}
+
 function keys(o) {
     if (typeof o != 'object') throw TypeError();
     let result = [];
