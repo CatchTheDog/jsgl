@@ -169,6 +169,89 @@ function checkscope() {
 console.log(checkscope()());  //local scope
 //闭包可以捕捉到它定义时的作用域链中的局部变量，并一一保存下来，在执行时，仍然使用它定义时的作用域链。
 //也就是说函数定义时的作用域链，在函数执行时依然有效;所以将函数返回后，内部函数在外部作用域内执行时，仍然使用定义时的作用域链，可以访问到内部变量。
+//在方法调用前后打印日志
+function trace(o, m) {
+    let original = o[m];
+    let outerThis = this;
+    let outerArgs = arguments;
+    o[m] = function () {
+        console.log(new Date(), "Entering:", m);
+        console.log(outerThis === this); //false
+        console.log(outerArgs === arguments);//false
+        let result = original.apply(this, arguments);//为什么使用this?不应该使用 o 吗？
+        console.log(new Date(), "Existing:", m);
+        return result;
+    };
+}
+
+let o = {a: 'a', b: 'b'};
+trace(o, 'toString');
+o.toString();
+
+//bind方法 将函数绑定到某个对象。当在函数f()上调用bind()方法并插入怒一个对象o作为参数，这个方法将返回一个函数，
+//调用返回的函数将会把原始的函数f()当做o的方法来调用，传入新函数的任何实参都将传入原始函数。
+//bind方法不仅会将函数绑定至一个对象，它还会将bind()的实参绑定至this,这是一种函数式编程技术，也称为“柯里化”。
+function bind(f, o) {
+    if (f.bind) return f.bind(o);
+    else return function () {
+        return f.apply(o, arguments);
+    };
+}
+
+function f(y) {
+    return this.x + y;
+}
+
+let o_1 = {x: 1};
+let g = f.bind(o_1);
+console.log(g(3));
+//柯里化
+let sum = function (x, y) {
+    return x + y;
+};
+let succ = sum.bind(null, 1);//将方法绑定到null,将sum第一个参数绑定到1
+console.log(succ(2));
+
+function f_1(y, z) {
+    return this.x + y + z;
+}
+
+let g_1 = f_1.bind({x: 1}, 2);
+console.log(g_1(3));
+
+//ECMAScript 3 版本中的Function.bind()方法
+if (!Function.prototype.bind) {
+    Function.prototype.bind = function (o /*,args*/) {
+        let self = this, boundArgs = arguments;
+        return function () {
+            let args = [], i;
+            //将bind方法调用时的第一个实参后的其它参数都作为实参传入原始函数
+            for (i = 1; i < boundArgs.length; i++) args.push(boundArgs[i]);
+            //将调用bind()方法返回的函数时传入的所有实参作为后续参数传入原始函数
+            for (i = 0; i < arguments.length; i++) args.push(arguments[i]);
+            return self.apply(o, args);  //在使用时：xx_function.bind(xxx_object,args..);所以这里self指的是调用上下文——xx_function.
+        };
+    };
+}
+
+//除了使用function关键字定义函数，还可以使用Function()构造函数来定义函数。
+let x_1 = new Function("x", "y", "return x * y;");
+//使用new Function()构造函数，可以实现在运行时动态编译函数；每次调用new Function()都会重新编译并创建一个新的函数对象，而函数定义语句和函数定义表达式则不会每次调用都重新编译。
+//使用new Function()创建的函数并不是使用词法作用域，函数体代码的编译总是会在顶层（全局作用域）函数执行。
+var scope_1 = 'global';
+
+function constructFunction() {
+    var scope_1 = 'local';
+    return new Function('return scope_1;'); //Error:ReferenceError: scope_1 is not defined
+}
+
+console.log(constructFunction()());
+
+//可调用对象：可以在函数调用表达式中调用的对象。所有函数都是可调用的，但并非所有的可调用对象都是函数。
+//常用的可调用对象RegExp对象，建议不使用可调用对象。
+
+//函数式编程
+//可以在javascript中应用函数式编程技术：
 
 
 
