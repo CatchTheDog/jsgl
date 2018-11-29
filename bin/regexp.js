@@ -57,3 +57,30 @@ let str = 'JavasCript';
 console.log(str.search(/script/i)); //返回第一个与模式匹配的子串的起始位置 4
 console.log(str.replace(/javascript/gi, 'JavaScript'));
 
+let quote = /"([^"]*)"/g;
+console.log("qu'ot'e".replace(quote, '“$1”'));
+
+let x_20 = "1 plus 2 equals 3";
+console.log(x_20.match(/\d+/)); //返回匹配结果组成的数组,如果没有参数g，则只返回第一个匹配的结果和各个子表达式匹配的结果。
+
+let url_pattern = /(\w+):\/\/([\w.]+)\/(\S*)/;
+let text = "Visit my blog at http://www.example.com/~david";
+let result = text.match(url_pattern);
+for (let i = 0; i < result.length; i++)
+    console.log(result[i]);
+
+//split
+let number_str = "123,456,789,0";
+console.log(number_str.split(/\s*,\s*/)); // \s匹配任意不可见字符(空格，制表符，换页符等等)，
+
+let zipcode = new RegExp("\\d{5}", "g");
+//exec() 与String.match()方法类似
+
+let pattern_2 = /Java/g;
+let text_1 = "JavaScript is more fun than Java!";
+let result_1;
+while ((result_1 = pattern_2.exec(text_1)) != null) {
+    console.log("Matched '" + result[0] + "' at position " + result.index + ";next search begins at " + pattern.lastIndex);
+}
+
+//test() 如果匹配一个结果，则返回true
